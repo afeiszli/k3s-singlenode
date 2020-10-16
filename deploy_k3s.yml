@@ -1,0 +1,25 @@
+---
+- hosts: all
+  tasks:
+
+    - name: "Install K3S"
+      shell: "curl -sfL https://get.k3s.io | sh -"
+      become: yes
+      
+    - name: Open port 80 for http access
+      firewalld:
+        service: http
+        permanent: true
+        state: enabled
+      become: yes
+    - name: Open port 443 for http access
+      firewalld:
+        service: https
+        permanent: true
+        state: enabled
+      become: yes
+    - name: Restart the firewalld service to load in the firewall changes
+      service:
+        name: firewalld
+        state: restarted
+      become: yes
